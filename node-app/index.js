@@ -129,6 +129,43 @@ app.post('/login', async (req, res) => {
 
 
 
+app.post('/addProduct', upload.single('image'), async (req, res) => {
+
+  const name = req.body.name;
+  const category = req.body.category;
+  const description = req.body.description;
+  const price = req.body.price;
+  const image = req.file.path;
+  const userID = req.body.userId;
+
+  const productData = new Product({ name, description, category, price, image, userID });
+
+  productData.save()
+    .then(() => {
+      res.send({ message: 'saved success' })
+    })
+    .catch(() => {
+      res.send({ message: 'server error' })
+    })
+
+})
+
+
+
+app.get('/getProduct', async (req, res) => {
+
+  Product.find()
+    .then((result) => {
+      // console.log(result, "user data");
+      res.send({ message: "success", products: result })
+    })
+    .catch((err) => {
+      res.send({ message: "server error" })
+    })
+
+})
+
+
 
 
 app.listen(port, () => {
