@@ -10,6 +10,9 @@ import {
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import AddProduct from "./components/AddProduct";
+import ProductDetailPage from "./components/DetailProductPage";
+
 
 
 
@@ -19,6 +22,10 @@ const router = createBrowserRouter([
     element: (<Home />),
   },
   {
+    path: "about",
+    element: <div>About</div>,
+  },
+  {
     path: "/login",
     element: (<Login />),
   },
@@ -26,6 +33,14 @@ const router = createBrowserRouter([
     path: "/signup",
     element: (<Signup />),
   },
+  {
+    path: "/add-product",
+    element: (<AddProduct />),
+  },
+  {
+    path: "/product/:productId",
+    element: (<ProductDetailPage />)
+  }
 ]);
 
 createRoot(document.getElementById("root")).render(
