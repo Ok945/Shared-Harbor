@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&display=swap');
+
+
+.container {
+    display: grid;
+    place-items: center;
+    font-family: 'Baloo 2', cursive;
+    background: #D2ECF3;
+    top: 150px;
+    position: relative;
+    height: 500px;
+    width: 280px;
+    padding: 10px;
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
+    margin: 20px;
+}
+
+
+
+.head__section {
+    height: 35px;
+    width: 35px;
+    background: #F64F58;
+    color: #fff;
+    text-align: center;
+    line-height: 36px;
+    border-radius: 50%;
+    box-shadow: 0 0 15px #f64f57b0;
+    top: 0px;
+    left: 0px;
+    position: absolute;
+    margin: 10px;
+    font-size: 24px;
+
+
+}
+
+
+.display__product {
+    position: relative;
+    margin: 30px auto;
+    height: 150px;
+    width: 100%;
+    /* background: #FEECE0; */
+    border-radius: 50%;
+    z-index: 10;
+    display: flex;
+}
+
+
+
+.display__product img {
+    height: 150px;
+    position: absolute;
+    -webkit-filter: drop-shadow(2px 2px 15px rgba(0, 0, 0, 0.7));
+    z-index: 11;
+    width: 200px;
+}
+
+.slider {
+    width: 100px;
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.slider span {
+    display: block;
+    height: 8px;
+    width: 15px;
+    background: #93d7f0;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.slider span.active {
+    width: 34px;
+    background: #84b8d0;
+}
+
+
+
+
+.product__details {
+    width: 240px;
+}
+
+
+
+.title__section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+}
+
+.title__section span {
+    display: flex;
+    align-items: center;
+    color: #929292;
+}
+
+.title__section span i {
+    margin-right: 5px;
+    font-size: 14px;
+    color: #FDD446;
+    line-height: 8px;
+}
+
+.title h2 {
+    color: #424AA4;
+}
+
+.title p {
+    margin-top: -10px;
+    font-size: 12px;
+    white-space: nowrap;
+    color: #424AA4;
+    overflow: hidden;
+
+}
+
+
+
+
+
+.product_owner {
+    white-space: nowrap;
+    margin: 10px 0;
+}
+
+.product_owner p {
+    color: #929292;
+    font-family: 'Baloo 2', cursive;
+    font-size: 20px;
+}
+
+ul {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+
+
+
+.product__add {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.product__add .price {
+    font-size: 40px;
+    font-weight: 700;
+    color: #121212;
+}
+
+.product__add .price::first-letter {
+    font-size: 14px;
+    padding-right: 5px;
+}
+
+button {
+    height: 40px;
+    padding: 5px 10px;
+    width: 150px;
+    background: #F7F7F7;
+    color: #424AA4;
+    border-radius: 20px;
+    border: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-family: 'Baloo 2', cursive;
+    cursor: pointer;
+}
+
+button i {
+    padding: 5px;
+}
