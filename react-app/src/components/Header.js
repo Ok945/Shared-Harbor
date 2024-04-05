@@ -7,9 +7,12 @@ import Arrow from "./icons/Arrow";
 import SellButton from "./icons/SellButton";
 import SellButtonPlus from "./icons/SellButtonPlus";
 import { jwtDecode } from 'jwt-decode';
+import { LuRefreshCcw } from "react-icons/lu";
+import { RxCross1 } from "react-icons/rx";
 
 
-const Header = () => {
+
+const Header = (props) => {
 
   const navigate = useNavigate();
 
@@ -38,15 +41,13 @@ const Header = () => {
   const [filteredData, setFilteredData] = useState([]);
 
 
-  const handleEmptyClick = () => {
-    alert("No items found.., please search by product name");
-  }
+  // const handleEmptyClick = () => {
+  //   alert("No items found.., please search by product name");
+  // }
 
 
 
-  const handleFilter = (event) => {
 
-  };
 
   const clearInput = () => {
     setFilteredData([]);
@@ -55,10 +56,6 @@ const Header = () => {
 
 
 
-  const handleSelectedSearch = (value) => {
-
-
-  }
 
 
 
@@ -76,17 +73,26 @@ const Header = () => {
             <OlxLogo></OlxLogo>
           </div>
         </Link>
+
+
         <div className="placeSearch">
+
           <input type="text"
             placeholder="Search specific product..."
-            value={wordEntered}
-            onChange={handleFilter}
-          />{filteredData.length === 0 ? (
-            <div onClick={handleEmptyClick}> <SearchIcon /> </div>
-          ) : (
-            <div id="clearBtn" onClick={clearInput} > <Arrow></Arrow></div>
+            value={props && props.search}
+            onChange={(e) => props.handleSearch && props.handleSearch(e.target.value)}
+          />
+
+          <div onClick={() => props.handleClick && props.handleClick()}> <SearchIcon /> </div>
+          {props.handleClearSearch && props.search && (
+            <div id="clearBtn" onClick={props.handleClearSearch}>
+              {/* <LuRefreshCcw size={25} style={{ marginLeft: '5px'}} /> */}
+              <RxCross1 size={25} style={{ marginLeft: '5px'}}/>
+            </div>
           )}
-          {filteredData.length !== 0 && (
+
+
+          {/* {filteredData.length !== 0 && (
             <div className="dataResult-header">
               {filteredData.slice(0, 15).map((value, key) => {
                 return (
@@ -96,7 +102,7 @@ const Header = () => {
                 );
               })}
             </div>
-          )}
+          )} */}
 
         </div>
 
