@@ -31,6 +31,7 @@ function App() {
               <Navigate to={'/login'} />
             )
           }
+          
         />
       </Routes>
     </div>
