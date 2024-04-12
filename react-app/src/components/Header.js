@@ -1,57 +1,50 @@
-import React, { useEffect, useState } from 'react'
-import './Header.css'
-import { Link, useNavigate } from 'react-router-dom'
-import OlxLogo from "./icons/OlxLogo";
-import SearchIcon from "./icons/SearchIcon";
-import Arrow from "./icons/Arrow";
-import SellButton from "./icons/SellButton";
-import SellButtonPlus from "./icons/SellButtonPlus";
+import React, { useEffect, useState } from 'react';
+import './Header.css';
+import { Link } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import { LuRefreshCcw } from "react-icons/lu";
-import { RxCross1 } from "react-icons/rx";
-
+import Cookies from 'js-cookie';
+import OlxLogo from './icons/OlxLogo';
+import SearchIcon from './icons/SearchIcon';
+import SellButton from './icons/SellButton';
+import SellButtonPlus from './icons/SellButtonPlus';
+import { RiCloseLine } from 'react-icons/ri'; // Example: Importing a specific icon
+import { useAuthContext } from '../context/AuthContext';
+import axios from "axios";
+import { IoLogoSkype } from "react-icons/io";
 
 
 const Header = (props) => {
 
-  const navigate = useNavigate();
-
-  const [user, setUser] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { authUser } = useAuthContext();
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Retrieve token from localStorage
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      // Decode the token
-      const decodedToken = jwtDecode(token);
-
-      // Extract user data from decoded token
-      const { data } = decodedToken;
-
-      // Set user data state
-      // console.log(data.email);
-      // console.log(data.fname);
-      setUser(data.fname);
+    if (authUser && authUser.fname) {
+      setUser(authUser.fname);
     }
-  }, []);
+  }, [authUser]);
 
 
-  const [wordEntered, setWordEntered] = useState("");
-  const [filteredData, setFilteredData] = useState([]);
+  const { setAuthUser } = useAuthContext();
 
+  const logout = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post("http://localhost:8090/api/auth/logout", {});
+      const data = response.data;
+      if (data.error) {
+        throw new Error(data.error);
+      }
 
-  // const handleEmptyClick = () => {
-  //   alert("No items found.., please search by product name");
-  // }
-
-
-
-
-
-  const clearInput = () => {
-    setFilteredData([]);
-    setWordEntered("");
+      localStorage.removeItem("chat-user");
+      setAuthUser(null);
+    } catch (error) {
+      // toast.error(error.message);
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
 
@@ -59,62 +52,37 @@ const Header = (props) => {
 
 
 
-  const logoutHandler = () => {
-    localStorage.removeItem('token');
-    setUser("");
-    navigate('/')
-  }
+
 
   return (
     <div className="headerParentDiv">
       <div className="headerChildDiv">
         <Link to="/">
           <div className="brandName">
-            <OlxLogo></OlxLogo>
+            <IoLogoSkype size={65} />
           </div>
         </Link>
 
-
         <div className="placeSearch">
-
-          <input type="text"
+          <input
+            type="text"
             placeholder="Search specific product..."
-            value={props && props.search}
+            value={props.search || ''}
             onChange={(e) => props.handleSearch && props.handleSearch(e.target.value)}
           />
-
-          <div onClick={() => props.handleClick && props.handleClick()}> <SearchIcon /> </div>
+          <div onClick={() => props.handleClick && props.handleClick()}>
+            <SearchIcon />
+          </div>
           {props.handleClearSearch && props.search && (
             <div id="clearBtn" onClick={props.handleClearSearch}>
-              {/* <LuRefreshCcw size={25} style={{ marginLeft: '5px'}} /> */}
-              <RxCross1 size={25} style={{ marginLeft: '5px'}}/>
+              <RiCloseLine size={25} style={{ marginLeft: '5px' }} />
             </div>
           )}
-
-
-          {/* {filteredData.length !== 0 && (
-            <div className="dataResult-header">
-              {filteredData.slice(0, 15).map((value, key) => {
-                return (
-                  <div key={key} className="dataItem-header" onClick={() => handleSelectedSearch(value)}>
-                    <p>{value.name} </p>
-                  </div>
-                );
-              })}
-            </div>
-          )} */}
-
-        </div>
-
-
-
-        <div className="productSearch">
-          {/* <Search /> */}
         </div>
 
         <div className="loginPage">
           {user ? (
-            user
+            <span>Welcome, {user}</span> // Display user's name if logged in
           ) : (
             <Link to="/login">
               <span>Login</span>
@@ -124,17 +92,24 @@ const Header = (props) => {
         </div>
 
         {user && (
-          <span onClick={logoutHandler} className="logout-span">
+          <span className="logout-span" onClick={logout} >
             Logout
           </span>
         )}
+        {user && (
+          <Link to="/admin">
+            <span className="logout-span">Admin</span>
+          </Link>
+        )}
 
-        {localStorage.getItem('token') ? (
+
+        {/* Conditional rendering based on user authentication */}
+        {user ? (
           <Link to="/add-product">
             <div className="sellMenu">
-              <SellButton></SellButton>
+              <SellButton />
               <div className="sellMenuContent">
-                <SellButtonPlus></SellButtonPlus>
+                <SellButtonPlus />
                 <span>SELL</span>
               </div>
             </div>
@@ -142,9 +117,9 @@ const Header = (props) => {
         ) : (
           <Link to="/login">
             <div className="sellMenu">
-              <SellButton></SellButton>
+              <SellButton />
               <div className="sellMenuContent">
-                <SellButtonPlus></SellButtonPlus>
+                <SellButtonPlus />
                 <span>SELL</span>
               </div>
             </div>
@@ -152,7 +127,7 @@ const Header = (props) => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

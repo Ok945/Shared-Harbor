@@ -3,10 +3,11 @@ import Header from './Header';
 import ProductCard from './ProductCard';
 import axios from 'axios';
 import './Home.css';
+import { useNavigate } from 'react-router-dom'
 
+import { useAuthContext } from '../context/AuthContext';
 
-
-const Home = () => {
+const AdminPage = () => {
 
     const [originalProducts, setOriginalProducts] = useState([]); // State to hold original products list
     const [products, setProducts] = useState([]);
@@ -14,15 +15,17 @@ const Home = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const { authUser } = useAuthContext();
+
 
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-
+                // console.log(authUser._id)
                 const chatUser = JSON.parse(localStorage.getItem('chat-user'));
                 const token = chatUser.token;
-                const url = 'http://localhost:8090/api/products';
+                const url = `http://localhost:8090/api/products/admin/${authUser._id}`;
                 const response = await axios.get(url, {
                     headers: {
                         'Authorization': `Bearer ${token}`, // Include JWT token in Authorization header
@@ -76,8 +79,23 @@ const Home = () => {
             .finally(() => setLoading(false));
     };
 
+
+
+    const navigate = useNavigate();
+
+
+
+    const handleClick = (id) => {
+        navigate(`/admin/product/${id}`, {
+            state: {
+                productID: id
+            }
+        });
+
+    };
+
     return (
-        <div className='h-fit mx-auto flex justify-center'>
+        <div className='h-screen flex justify-center'>
             <Header search={search} handleSearch={handleSearch} handleClick={handleSearchClick} handleClearSearch={handleClearSearch} />
 
 
@@ -88,7 +106,21 @@ const Home = () => {
             ) : products.length > 0 ? (
                 <div className='m-40 flex flex-wrap justify-around'>
                     {products.map((product) => (
-                        <ProductCard key={product._id} product={product} />
+                        <div className="card card-compact w-96 bg-base-100 shadow-xl">
+
+                            <figure>
+                                <img src={'http://localhost:8090/' + product.image} alt={product.name} />
+
+                            </figure>
+                            <div className="card-body">
+                                <h2 className="card-title">{product.name}</h2>
+                                <p>{product.description}</p>
+                                <div className="card-actions justify-between ">
+                                    <span className="price text-l">₹{product.price}</span>
+                                    <button className="btn btn-primary" onClick={() => handleClick(product._id)}>See More</button>
+                                </div>
+                            </div>
+                        </div>
                     ))}
                 </div>
             ) : (
@@ -99,4 +131,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default AdminPage;

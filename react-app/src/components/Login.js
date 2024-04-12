@@ -1,14 +1,15 @@
 import React from 'react'
-import './Login.css'
+// import './Login.css'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { useAuthContext } from '../context/AuthContext'
 
 const Login = () => {
     const navigate = useNavigate();
 
-    const [passShow, setPassShow] = useState(false);
+    const { setAuthUser } = useAuthContext();
 
     const [inputVal, setInputVal] = useState({
         email: "",
@@ -26,7 +27,7 @@ const Login = () => {
     };
 
 
-    const url = 'http://localhost:8080/login'
+    const url = 'http://localhost:8090/api/auth/login'
 
 
     const addUserData = async (e) => {
@@ -46,11 +47,18 @@ const Login = () => {
             };
 
 
+        
             axios.post(url, userData)
                 .then((res) => {
                     if (res.status === 201) {
-                        localStorage.setItem('token', res.data.token);
-                        alert("Login Successfull");
+                        // localStorage.setItem('token', res.data.token);
+                        const userData = res.data;
+                        // console.log(res);
+                        localStorage.setItem("chat-user", JSON.stringify(userData));
+                        setAuthUser(userData);
+
+
+                        // alert("Login Successfull");
                         setInputVal({ email: "", password: "", });
                         navigate('/');
                     }
@@ -76,53 +84,47 @@ const Login = () => {
 
 
     return (
-        <div>
+        <div className='h-screen flex flex-col items-center justify-center w-96 mx-auto'>
 
-            <div className='formbox'>
+            <div className='w-full  flex flex-col items-center p-6 rounded-lg shadow-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0'>
 
-                <form className="wrapper">
-                    <h2>LOGIN</h2>
-                    <section className="group">
-                        <input
-                            type="text"
-                            onChange={setVal}
-                            value={inputVal.email}
-                            size="30"
-                            className="input"
-                            name="email"
-                            required
-                        />
-                        <label htmlFor="email" className="label">
-                            Email
+                <h1 className='text-3xl font-semibold text-ceter text-gray-800'>Login</h1>
+
+                <form>
+
+
+                    <div>
+                        <label className="input input-bordered flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70"><path d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z" /><path d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" /></svg>
+                            <input
+                                type="text"
+                                className="grow"
+                                placeholder="Email"
+                                onChange={setVal}
+                                value={inputVal.email}
+                                name='email'
+                                required
+                            />
                         </label>
-                    </section>
-                    <section className='group' style={{ display: 'flex', flexDirection: 'row' }}>
-                        <input
-                            type={!passShow ? "password" : "text"}
-                            onChange={setVal}
-                            value={inputVal.password}
-                            minLength="8"
-                            className="input"
-                            name="password"
-                            required
-                            style={{ flex: 1 }}
 
-                        />
-                        <label htmlFor="password" className="label">
-                            Password
+
+                        <label className="input input-bordered flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70"><path fillRule="evenodd" d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z" clipRule="evenodd" /></svg>
+                            <input
+                                type="password"
+                                className="grow"
+                                onChange={setVal}
+                                value={inputVal.password}
+                                minLength="8"
+                                name="password"
+                                required
+
+                            />
                         </label>
-                        <div
-                            className="showpass"
-                            onClick={() => setPassShow(!passShow)}
-                            style={{ cursor: 'pointer' }}                             >
-                            {!passShow ? "Show" : "Hide"}
-                        </div>
-                    </section>
-                    <button type="button" className="btn" onClick={addUserData}>
-                        LOGIN
-                    </button>
+                        <button type="button" class="btn btn-primary" onClick={addUserData}>LOGIN</button>
+                    </div>
                     <section className="group">
-                        <p>Don't have an account? <Link to="/signup">Sign up</Link>.</p>
+                        <p>Don't have an account?  <Link to="/signup" className="link link-primary">Sign up</Link></p>
                     </section>
                     <span className="footer"></span>
                 </form>

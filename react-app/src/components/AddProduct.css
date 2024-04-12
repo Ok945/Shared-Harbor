@@ -18,6 +18,11 @@
     background-color: transparent;
 }
 
+label {
+
+    background-color: transparent;
+}
+
 .uploadBtn {
     margin-top: 30px;
     width: 100%;

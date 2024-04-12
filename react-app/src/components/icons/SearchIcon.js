@@ -1,5 +1,7 @@
 import React from 'react'
 
+
+
 export default function Search(props) {
     return( <svg
         width="25px"
@@ -8,6 +10,7 @@ export default function Search(props) {
         data-aut-id="icon"
         color={props.color ? props.color :''}
         fillRule="evenodd"
+        style={{ cursor: 'pointer' }}
       >
         <path
           className="rui-77aaa"

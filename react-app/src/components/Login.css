@@ -77,31 +77,3 @@
         }
     }
 }
-
-.btn {
-    color: #eeeeee;
-    background-color: transparent;
-    outline: none;
-    padding: 3px;
-    padding-bottom: 0;
-    margin: 35px 0;
-    border: none;
-    border-radius: 0;
-    border-bottom: solid 1px white;
-    -webkit-transition: all 1s linear;
-    -moz-transition: all 1s linear;
-    -ms-transition: all 1s linear;
-    -o-transition: all 1s linear;
-    transition: all 0.2s linear;
-
-    &:hover {
-        color: #bbe1fa;
-        border-bottom: solid 1px #72c2f7;
-        box-shadow: #72c2f7 0px 48px 100px 0px;
-        -webkit-transition: all 1s linear;
-        -moz-transition: all 1s linear;
-        -ms-transition: all 1s linear;
-        -o-transition: all 1s linear;
-        transition: all 1s linear;
-    }
-}

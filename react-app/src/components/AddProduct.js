@@ -1,37 +1,22 @@
 import React, { Fragment, useState, useEffect } from "react";
-import Header from './Header'
 import './AddProduct.css'
 import axios from 'axios'
-// import { useHistory } from "react-router";
-import GoLoading from "./Loading/GoLoading";
-import { jwtDecode } from 'jwt-decode';
-
-
+import { useAuthContext } from '../context/AuthContext';
+import { Link } from "react-router-dom";
 
 const AddProduct = () => {
 
-    // const { user } = useContext(AuthContext);
-    // const history = useHistory();
 
-    const [userData, setUserData] = useState(null);
+
+    const { authUser } = useAuthContext();
+    const [userID, setUserID] = useState(null);
 
     useEffect(() => {
-        // Retrieve token from localStorage
-        const token = localStorage.getItem('token');
-
-        if (token) {
-            // Decode the token
-            const decodedToken = jwtDecode(token);
-
-            // Extract user data from decoded token
-            const { data } = decodedToken;
-
-            // Set user data state
-            setUserData(data);
+        if (authUser && authUser._id) {
+            setUserID(authUser._id);
         }
-    }, []);
+    }, [authUser]);
 
-    // console.log(userData._id)
 
 
     const [name, setName] = useState("");
@@ -48,13 +33,19 @@ const AddProduct = () => {
         formData.append('name', name);
         formData.append('category', category);
         formData.append('price', price);
-        formData.append('description', description);
         formData.append('image', image);
-        formData.append('userId',userData._id);
+        formData.append('description', description);
+        // formData.append('userIdD', userID);
 
-        // console.log(formData);
-
-        axios.post('http://localhost:8080/addProduct', formData)
+        // console.log(image, userID);
+        const chatUser = JSON.parse(localStorage.getItem('chat-user'));
+        const token = chatUser.token;
+        axios.post('http://localhost:8090/api/products/addProduct', formData, {
+            headers: {
+                'Authorization': `Bearer ${token}`, // Include JWT token in Authorization header
+                'Content-Type': 'multipart/form-data', // Assuming JSON content type
+            },
+        })
             .then(response => {
                 // Handle success
                 // console.log(response.data);
@@ -64,7 +55,9 @@ const AddProduct = () => {
                 setDescription("");
                 setPrice("");
                 setImage("");
-                
+
+                console.log(response);
+
             })
             .catch(error => {
                 // Handle error
@@ -77,86 +70,105 @@ const AddProduct = () => {
 
 
     return (
-        <Fragment>
-            <Header />
-            {loading && <GoLoading />}
-            <div className="centerDiv">
-                <label>Name</label>
-                <br />
-                <input
-                    className="input"
-                    type="text"
-                    name="aame"
-                    value={name}
-                    onChange={(e) => {
-                        setName(e.target.value);
-                    }}
-                />
-                <br />
-                <label>Category:</label>
-                <select
-                    name="category"
-                    onChange={(e) => {
-                        setCategory(e.target.value);
-                    }}
-                    className="input"
-                > <option >Select Category</option>
-                    <option value="Cars">Cars</option>
-                    <option value="Cameras & Lenses">Cameras & Lenses</option>
-                    <option value="Computers & Laptops">Computers & Laptops</option>
-                    <option value="Mobile Phones">Mobile Phones</option>
-                    <option value="Motorcycles">Motorcycles</option>
-                    <option value="Tablets">Tablets</option>
-                </select>
-                <br />
-                <label>Price</label>
-                <br />
-                <input
-                    className="input"
-                    type="number"
-                    name="price"
-                    value={price}
-                    onChange={(e) => {
-                        setPrice(e.target.value);
-                    }}
-                />
-                <br />
-                <label>Description</label>
-                <br />
-                <input
-                    className="input"
-                    type="text"
-                    name="description"
-                    value={description}
-                    onChange={(e) => {
-                        setDescription(e.target.value);
-                    }}
-                />
-                <br />
 
-                <br />
-                <img
-                    alt="Posts"
-                    width="200px"
-                    height="200px"
-                    src={image ? URL.createObjectURL(image) : ""}
-                ></img>
 
-                <br />
-                <input
-                    type="file"
-                    onChange={(e) => {
-                        // console.log(e.target.files[0]);
-                        setImage(e.target.files[0]);
-                    }}
-                />
-                <br />
-                <button className="uploadBtn" onClick={handleSubmit}>
-                    upload and Submit
-                </button>
+        < div className='h-screen flex flex-col items-center justify-center w-96 mx-auto' >
+
+            <div className='w-full  flex flex-col items-center p-6 rounded-lg shadow-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0'>
+
+                <h1 className='text-3xl font-semibold text-ceter text-white'>Add Product</h1>
+
+                <form>
+
+
+                    <div>
+
+
+                        <label className="input input-bordered flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" /></svg>
+                            <input
+                                type="text"
+                                className="grow"
+                                placeholder="Product Name"
+                                onChange={(e) => {
+                                    setName(e.target.value);
+                                }}
+                                value={name}
+                                name='name'
+                                required
+                            />
+                        </label>
+
+                        <label>Category:</label>
+                        <select
+                            name="category"
+                            onChange={(e) => {
+                                setCategory(e.target.value);
+                            }}
+                            className="input"
+                        > <option >Select Category</option>
+                            <option value="Cars">Sports Equipments</option>
+                            <option value="Cameras & Lenses">Stationary</option>
+                            <option value="Computers & Laptops">Academic Books</option>
+                            <option value="Mobile Phones">Electronic Devices</option>
+                            <option value="Motorcycles">Lab Equipments</option>
+                            <option value="Tablets">Cycles</option>
+                            <option value="Tablets">Others</option>
+                        </select>
+
+                        <label className="input input-bordered flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" /></svg>
+                            <input
+                                type="number"
+                                className="grow"
+                                placeholder="Price"
+                                onChange={(e) => {
+                                    setPrice(e.target.value);
+                                }}
+                                value={price}
+                                name='price'
+                                required
+                            />
+                        </label>
+
+                        <textarea
+                            className="textarea textarea-success"
+                            placeholder="Bio"
+                            name="description"
+                            value={description}
+                            onChange={(e) => {
+                                setDescription(e.target.value);
+                            }}
+                        ></textarea>
+
+                        <img
+                            alt="Posts"
+                            width="200px"
+                            height="200px"
+                            src={image ? URL.createObjectURL(image) : ""}
+                        ></img>
+
+                        <input
+                            type="file"
+                            accept="image" onChange={(e) => {
+                                // console.log(e.target.files[0]);
+                                setImage(e.target.files[0]);
+                            }} className="file-input file-input-bordered w-full max-w-xs" />
+
+
+
+                        <button type="button" class="btn btn-primary" onClick={handleSubmit}>ADD</button>
+                    </div>
+                </form>
             </div>
-        </Fragment>
+
+        </div >
     )
 }
 
 export default AddProduct
+
+
+
+
+
