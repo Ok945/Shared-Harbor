@@ -31,7 +31,7 @@ To run this project locally, follow these steps:
      ```
 
 3. **Setup Environment Variables:**
-   - Create a `.env` file in the project's root directory (`campus-marketplace`).
+   - Create a `.env` file in the project's root directory (`Shared-Harbor`).
    - Add necessary environment variables:
      ```
      PORT=3000
